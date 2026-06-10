@@ -36,15 +36,43 @@ let etapa = 1;
 
 function fugir() {
 
-    const largura = container.offsetWidth - noBtn.offsetWidth;
-    const altura = container.offsetHeight - noBtn.offsetHeight;
+    const area = document.querySelector(".buttons");
 
-    const x = Math.random() * largura;
-    const y = 100 + Math.random() * (altura - 120);
+    const maxX = area.clientWidth - noBtn.offsetWidth;
+    const maxY = area.clientHeight - noBtn.offsetHeight;
+
+    const simRect = yesBtn.getBoundingClientRect();
+    const areaRect = area.getBoundingClientRect();
+
+    let novoX, novoY;
+    let distancia;
+
+    do {
+
+        novoX = Math.random() * maxX;
+        novoY = Math.random() * maxY;
+
+        // Centro do botão Não
+        const centroNaoX = novoX + noBtn.offsetWidth / 2;
+        const centroNaoY = novoY + noBtn.offsetHeight / 2;
+
+        // Centro do botão Sim
+        const centroSimX =
+            (simRect.left - areaRect.left) + yesBtn.offsetWidth / 2;
+
+        const centroSimY =
+            (simRect.top - areaRect.top) + yesBtn.offsetHeight / 2;
+
+        distancia = Math.sqrt(
+            Math.pow(centroNaoX - centroSimX, 2) +
+            Math.pow(centroNaoY - centroSimY, 2)
+        );
+
+    } while (distancia < 120); // distância mínima em pixels
 
     noBtn.style.position = "absolute";
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
+    noBtn.style.left = novoX + "px";
+    noBtn.style.top = novoY + "px";
 }
 
 noBtn.addEventListener("mouseover", fugir);
@@ -90,27 +118,30 @@ yesBtn.addEventListener("click", ()=>{
 
 });
 
-function criarCoracoes(){
+function criarCoracaoFundo() {
 
-    setInterval(()=>{
+    const heart = document.createElement("div");
 
-        const heart=document.createElement("div");
+    heart.className = "heart-bg";
 
-        heart.innerHTML="❤️";
+    // Escolhe um emoji aleatório
+    const emojis = ["❤️", "💖", "💕", "💗", "💘", "💝"];
 
-        heart.className="heart";
+    heart.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
 
-        heart.style.left=Math.random()*100+"vw";
+    heart.style.left = Math.random() * 100 + "vw";
 
-        heart.style.fontSize=(20+Math.random()*30)+"px";
+    heart.style.fontSize = (15 + Math.random() * 30) + "px";
 
-        document.body.appendChild(heart);
+    heart.style.animationDuration = (8 + Math.random() * 8) + "s";
 
-        setTimeout(()=>{
-            heart.remove();
-        },5000);
+    heart.style.opacity = Math.random() * 0.5 + 0.3;
 
-    },250);
+    heartsContainer.appendChild(heart);
+
+    setTimeout(() => {
+        heart.remove();
+    }, 17000);
 
 }
 
